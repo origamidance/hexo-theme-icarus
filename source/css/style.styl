@@ -18,6 +18,11 @@ body
 body, button, input, select, textarea
     font-family: family-sans
 
+@media screen
+    .column.is-8-widescreen
+        flex: auto
+    .column.is-3-widescreen
+        flex: auto
 @media screen and (min-width: screen-widescreen)
     .is-1-column .container
     .is-2-column .container
@@ -54,8 +59,8 @@ body, button, input, select, textarea
         background: #e7e7e7
 
 .card
-    border-radius: 4px
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05), 0 0 1px rgba(0,0,0,0.1)
+    border-radius: 10px
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05) /* , 0 0 1px rgba(0,0,0,0.1) */
     & + .card,
     & + .column-right-shadow
         margin-top: 1.5rem
