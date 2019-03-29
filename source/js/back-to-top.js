@@ -1,5 +1,7 @@
 $(document).ready(function () {
+    var $toc = $('#toc');
     var $button = $('#back-to-top');
+    var $tocButton = $('#show-toc');
     var $footer = $('footer.footer');
     var $mainColumn = $('.column-main');
     var $leftSidebar = $('.column-left');
@@ -7,6 +9,7 @@ $(document).ready(function () {
     var lastScrollTop = 0;
     var rightMargin = 20;
     var bottomMargin = 20;
+    var isShowToc = false;
     var lastState = null;
     var state = {
         base: {
@@ -54,12 +57,22 @@ $(document).ready(function () {
         if (lastState !== null && isStateEquals(lastState, state)) {
             return;
         }
-        $button.attr('class', state.classname);
-        for (let prop in state) {
-            if (prop === 'classname') {
-                continue;
+        if (isShowToc) {
+            $tocButton.attr('class', state.classname);
+            for (let prop in state) {
+                if (prop === 'classname') {
+                    continue;
+                }
+                $tocButton.css(prop, state[prop]);
             }
-            $button.css(prop, state[prop]);
+        } else {
+            $button.attr('class', state.classname);
+            for (let prop in state) {
+                if (prop === 'classname') {
+                    continue;
+                }
+                $button.css(prop, state[prop]);
+            }
         }
         lastState = state;
     }
@@ -116,6 +129,7 @@ $(document).ready(function () {
     function update() {
         // desktop mode or tablet mode with only right sidebar enabled
         if (isDesktop() || (isTablet() && !hasLeftSidebar() && hasRightSidebar())) {
+            isShowToc=false;
             var nextState;
             var padding = ($mainColumn.outerWidth() - $mainColumn.width()) / 2;
             var maxLeft = $(window).width() - getButtonWidth() - rightMargin;
@@ -137,10 +151,21 @@ $(document).ready(function () {
             applyState(nextState);
         } else {
             // mobile and tablet mode
+            // if (!isScrollUp()) {
+            //     applyState(state['mobile-hidden']);
+            // } else {
+            //     applyState(state['mobile-visible']);
+            // }
+            if($toc.length>0){
+            isShowToc = true;
+            applyState(state['mobile-visible']);
+            }else{
+            isShowToc =false;
             if (!isScrollUp()) {
                 applyState(state['mobile-hidden']);
             } else {
                 applyState(state['mobile-visible']);
+            }
             }
             updateScrollTop();
         }
@@ -150,7 +175,21 @@ $(document).ready(function () {
     $(window).resize(update);
     $(window).scroll(update);
 
+    if ($toc.length > 0) {
+    var $mask = $('<div>');
+        $mask.attr('id', 'toc-mask');
+        $('body').append($mask);
+        function toggleToc() {
+            $toc.toggleClass('is-active');
+            $mask.toggleClass('is-active');
+        }
+        $toc.on('click', toggleToc);
+        $mask.on('click', toggleToc);
+        $('#show-toc').on('click', toggleToc);
+    }
+
     $('#back-to-top').on('click', function () {
         $('body, html').animate({ scrollTop: 0 }, 400);
     });
+
 });

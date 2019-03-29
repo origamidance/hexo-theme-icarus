@@ -1,6 +1,7 @@
 <% if (plugin !== false) { %>
     <% if (head) { %>
         <script src="https://unpkg.com/emojisplosion/lib/global.js"></script>
+    <% } else { %>
         <%- _js('js/emojisplosion', true) %>
     <% } %>
 <% } %>
