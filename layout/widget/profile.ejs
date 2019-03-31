@@ -81,7 +81,7 @@
         <div class="level is-mobile">
             <% for (let name in socialLinks) {
                     let link = socialLinks[name]; %>
-            <a class="level-item button is-white is-marginless" target="_blank"
+            <a class="level-item button is-white is-marginless is-medium" target="_blank"
                 title="<%= name %>" href="<%= url_for(typeof(link) === 'string' ? link : link.url) %>">
                 <% if (typeof(link) === 'string') { %>
                 <%= name %>
