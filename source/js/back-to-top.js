@@ -15,9 +15,9 @@ $(document).ready(function () {
         base: {
             classname: 'card has-text-centered',
             left: '',
-            width: 64,
+            width: 40,
             bottom: bottomMargin,
-            'border-radius': 4
+            'border-radius': '50%'
         }
     };
     state['desktop-hidden'] = Object.assign({}, state.base, {
@@ -57,15 +57,6 @@ $(document).ready(function () {
         if (lastState !== null && isStateEquals(lastState, state)) {
             return;
         }
-        if (isShowToc) {
-            $tocButton.attr('class', state.classname);
-            for (let prop in state) {
-                if (prop === 'classname') {
-                    continue;
-                }
-                $tocButton.css(prop, state[prop]);
-            }
-        } else {
             $button.attr('class', state.classname);
             for (let prop in state) {
                 if (prop === 'classname') {
@@ -73,7 +64,26 @@ $(document).ready(function () {
                 }
                 $button.css(prop, state[prop]);
             }
-        }
+        if ($toc.length>0&&!isDesktop()) {
+            // state.bottom+=bottomMargin;
+            $tocButton.attr('class', state.classname);
+            for (let prop in state) {
+                if (prop === 'classname') {
+                    continue;
+                }
+                $tocButton.css(prop, state[prop]);
+            }
+            $tocButton.css('bottom',bottomMargin*2+30);
+        } 
+        // else {
+        //     $button.attr('class', state.classname);
+        //     for (let prop in state) {
+        //         if (prop === 'classname') {
+        //             continue;
+        //         }
+        //         $button.css(prop, state[prop]);
+        //     }
+        // }
         lastState = state;
     }
 
@@ -129,7 +139,7 @@ $(document).ready(function () {
     function update() {
         // desktop mode or tablet mode with only right sidebar enabled
         if (isDesktop() || (isTablet() && !hasLeftSidebar() && hasRightSidebar())) {
-            isShowToc=false;
+            // isShowToc=false;
             var nextState;
             var padding = ($mainColumn.outerWidth() - $mainColumn.width()) / 2;
             var maxLeft = $(window).width() - getButtonWidth() - rightMargin;
@@ -156,17 +166,15 @@ $(document).ready(function () {
             // } else {
             //     applyState(state['mobile-visible']);
             // }
-            if($toc.length>0){
-            isShowToc = true;
-            applyState(state['mobile-visible']);
-            }else{
-            isShowToc =false;
-            if (!isScrollUp()) {
+            // if($toc.length>0){
+            // applyState(state['mobile-visible']);
+            // }else{
+            if (getScrollTop()===0) {
                 applyState(state['mobile-hidden']);
             } else {
                 applyState(state['mobile-visible']);
             }
-            }
+            // }
             updateScrollTop();
         }
     }
@@ -178,6 +186,7 @@ $(document).ready(function () {
     if ($toc.length > 0) {
     var $mask = $('<div>');
         $mask.attr('id', 'toc-mask');
+        $mask.toggleClass('is-')
         $('body').append($mask);
         function toggleToc() {
             $toc.toggleClass('is-active');
